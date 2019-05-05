@@ -5,8 +5,10 @@ include_once 'config/config.php';
 
 // Display the header files
 include_once 'layouts/header.html';
+define('DATE_FORMAT','m-d-Y');
 echo '<h1>The blog archive</h1>';
 
+echo "<ul>\n";
 $directory = POSTS_DIR . '/';
 
 // Ensure the directory isn't empty
@@ -17,9 +19,14 @@ if (glob($directory . '*.md') != FALSE)
     array_multisort(array_map('filemtime', $files), SORT_NUMERIC, SORT_DESC, $files);
     foreach ($files as $file)
     {
-        echo '<p><a href="posts' . $post->path_to_post($file) . '">' . $post->format_blog_title($file) . '</a></p>';
+	$f=new PostFilename($file);
+        echo '<li>';
+	if ($f->date)
+		echo $f->date->format(DATE_FORMAT).' ';
+	echo '<a href="posts' . $post->path_to_post($file) . '">' . $f->title . '</a></li>';
     }
 }
+echo "</ul>\n";
 
 include_once 'layouts/footer.html';
 

@@ -42,6 +42,9 @@ To add a new post just create the `.md` file within the `posts_source` directory
 add your content! That's all. By creating the file you have created a new blog
 post and it will be automatically made live to the public.
 
+If the file name is prefixed by a date in numeric format YYYYMMDD, this date will be
+shown in the posts list.
+
 ```Shell
 Create a file called "new-post-feature.md" will render the following:
 

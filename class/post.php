@@ -1,5 +1,4 @@
 <?php
-
 class Post {
 
     function __construct() {}
@@ -36,7 +35,7 @@ class Post {
         $a[] = $cur;
         return $a;
     }
-
+     
     /**
      * Break the file into smaller, more useful pieces.
      *
@@ -64,6 +63,42 @@ class Post {
      */
     function format_blog_title($title)
     {
-        return ucfirst(str_replace(array('posts_source/', '.md', '-'), array('', '', ' '), $title));
+	return PostFilename::format_title($title);
     }
 }
+
+class PostFilename {
+    public static $DATE_FORMAT='Ymd';
+    public static $DATE_SIZE=8;
+    public $filename;
+    public $title;
+    public $date;
+    
+    function __construct($filename) {
+	$this->filename=$filename;
+	$t=PostFilename::format_title($filename);
+        $filename_size=strlen($t);
+        if ($filename_size<=PostFilename::$DATE_SIZE)
+	    $this->date=FALSE;
+	else {
+      	    $date_candidate=substr($t,0, PostFilename::$DATE_SIZE);
+	    $this->date=DateTimeImmutable::createFromFormat(PostFilename::$DATE_FORMAT, $date_candidate);
+	}
+	if ($this->date===FALSE)
+		$this->title=$t;
+	else
+		$this->title=substr($t,PostFilename::$DATE_SIZE);
+    }
+
+    function format_title($title){
+	return ucfirst(str_replace(array('posts_source/', '.md', '-'), array('', '', ' '), $title));
+    }
+}
+
+//$f=new PostFilename('20000911ciccio-ciaccio.md');
+//echo "title $f->title\n";
+//if ($f->date){
+//	$d=$f->date->format('dmY');
+//	echo "date $d\n";
+//} else 
+//	echo "no date\n";
